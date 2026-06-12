@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: sisouve-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sisouve
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - sisouve_postgres_data:/var/lib/postgresql/data
+      - ./database/sisouve_schema_postgresql.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/sisouve_visualizacao_postgresql.sql:/docker-entrypoint-initdb.d/02_visualizacao.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sisouve"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+    container_name: sisouve-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: sisouve
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: troque_esta_chave_em_producao
+    ports:
+      - "3000:3000"
+    volumes:
+      - sisouve_uploads:/app/uploads
+
+volumes:
+  sisouve_postgres_data:
+  sisouve_uploads:
