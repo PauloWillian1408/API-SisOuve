@@ -10,7 +10,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - sisouve_postgres_data:/var/lib/postgresql/data
+      - sisouve_postgres_data:/var/lib/postgresql
       - ./database/sisouve_schema_postgresql.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
       - ./database/sisouve_visualizacao_postgresql.sql:/docker-entrypoint-initdb.d/02_visualizacao.sql:ro
     healthcheck:
