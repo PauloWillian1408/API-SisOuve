@@ -2,6 +2,67 @@
 
 API em Node.js para conectar o SisOuve ao banco PostgreSQL.
 
+## Rodando com Docker (recomendado)
+
+A forma mais facil de rodar o projeto. Nao precisa instalar o PostgreSQL — o Docker cuida de tudo.
+
+### Pre-requisito
+
+Instalar o **Docker Desktop**: https://www.docker.com/products/docker-desktop
+
+### Passo a passo
+
+**1. Clonar o repositorio**
+```bash
+git clone https://github.com/PauloWillian1408/API-SisOuve.git
+cd API-SisOuve
+```
+
+**2. Criar o arquivo `.env`**
+```bash
+cp .env.example .env
+```
+
+Editar o `.env` com os seguintes valores:
+```env
+PORT=3000
+DB_HOST=postgres
+DB_PORT=5432
+DB_NAME=sisouve
+DB_ADMIN_DATABASE=postgres
+DB_USER=postgres
+DB_PASSWORD=postgres
+JWT_SECRET=troque_por_uma_chave_grande_e_segura
+```
+
+> Importante: o `DB_HOST` deve ser `postgres` (nome do container), nao `localhost`.
+
+**3. Subir tudo**
+```bash
+docker-compose up -d
+```
+
+Isso baixa as imagens, cria o banco, aplica todas as tabelas e sobe a API automaticamente.
+
+**4. Testar**
+```
+http://localhost:3000/saude
+```
+
+Deve retornar: `{ "api": "ok", "banco": "ok" }`
+
+### Comandos uteis
+
+```bash
+docker-compose down       # parar tudo
+docker-compose up -d      # subir novamente
+docker-compose logs -f    # ver logs em tempo real
+```
+
+---
+
+## Rodando sem Docker (PostgreSQL ja instalado)
+
 ## 1. Configurar ambiente
 
 Copie `.env.example` para `.env` e preencha a senha do PostgreSQL:
